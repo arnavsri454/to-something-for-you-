@@ -11,10 +11,14 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </head>
 <body>
- <audio autoplay loop>
+
+    <!-- Updated audio element -->
+    <audio id="birthday-audio" loop>
         <source src="HBD.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
+
+    <!-- Everything else remains the same -->
     <div id="wrapper">
         <div class="flag__birthday">
             <img src="./images/1.png" alt="" width="350" class="flag__left">
@@ -147,9 +151,24 @@
         </div>
     </div>
 
-   
-</body>
+
+<!-- Script Section -->
 <script>
+    // 🎵 Music autoplay fix (added at top of script)
+    window.addEventListener('DOMContentLoaded', () => {
+        const audio = document.getElementById('birthday-audio');
+
+        audio.play().catch(() => {
+            // If autoplay fails (browser blocks), play after first click
+            const playAudio = () => {
+                audio.play();
+                document.removeEventListener("click", playAudio);
+            };
+            document.addEventListener("click", playAudio);
+        });
+    });
+
+    // Your existing script code below 👇
     let datetxt = "21 April 2009";
     let datatxtletter = "Happy birthday to my amazing GABBER Didi! I hope your day is filled with joy, laughter, and everything you love. Wishing you a fantastic year ahead, filled with happiness and success! ";
     let titleLetter = "To you";
@@ -161,6 +180,7 @@
     let currentIndexTitle = 0;
     let date__of__birth = document.querySelector(".date__of__birth span");
     let text__letter = document.querySelector(".text__letter p");
+
     setTimeout(function(){
         timeDatetxt = setInterval(function(){
             if(currentIndex < charArrDate.length){
@@ -220,6 +240,7 @@
             },50)
         },6000)
     })
+
     $(".close").on("click", function(){
         clearInterval(intervalContent)
         document.querySelector(".title__letter").textContent = "";
@@ -236,4 +257,6 @@
         $(".letter__border").slideUp();
     })
 </script>
+
+</body>
 </html>
