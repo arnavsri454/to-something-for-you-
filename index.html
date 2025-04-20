@@ -1,25 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="title" content="Happy Birthday Didi ">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
 
-    <title>Happy Birthday Pyari Didi </title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="title" content="Happy Birthday Didi "/>
+  <title>Happy Birthday Pyari Didi</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
+
+  <style>
+    #countdown-page {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #feecea;
+      font-family: 'Sriracha', cursive;
+      text-align: center;
+    }
+    #countdown-page h1 {
+      font-size: 2.5rem;
+      color: #ff3d5a;
+      margin-bottom: 1rem;
+    }
+    #timer {
+      font-size: 2rem;
+      color: #333;
+      background: #fff;
+      padding: 1rem 2rem;
+      border: 3px solid #ff3d5a;
+      border-radius: 20px;
+      box-shadow: 0 0 10px #ffb3ba;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Updated audio element -->
-    <audio id="birthday-audio" loop>
-        <source src="HBD.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+<!-- 🎵 Music -->
+<audio id="birthday-audio" loop>
+  <source src="HBD.mp3" type="audio/mpeg" />
+  Your browser does not support the audio element.
+</audio>
 
-    <!-- Everything else remains the same -->
-    <div id="wrapper">
+<!-- ⏳ Countdown Page -->
+<div id="countdown-page">
+  <h1>🎉 Countdown to Sakshi Didi's Birthday 🎂</h1>
+  <div id="timer">Loading...</div>
+</div>
+
+<!-- 🎈 Birthday Celebration Content -->
+ <div id="wrapper">
         <div class="flag__birthday">
             <img src="./images/1.png" alt="" width="350" class="flag__left">
             <img src="./images/1.png" alt="" width="350" class="flag__right">
@@ -256,6 +291,49 @@
         $(".box__letter").slideUp();
         $(".letter__border").slideUp();
     })
+</script>
+
+
+<!-- 🎬 Script -->
+<script>
+  const birthdayDate = new Date("2025-04-21T00:00:00");
+
+function updateCountdown() {
+  const now = new Date();
+  const diff = birthdayDate - now;
+
+  if (diff <= 0) {
+    document.getElementById("countdown-page").style.display = "none";
+    document.getElementById("main-content").style.display = "block";
+    document.body.classList.remove("no-scroll"); // ⬅️ Allow scrolling now
+
+    const audio = document.getElementById("birthday-audio");
+    audio.play().catch(() => {
+      document.addEventListener("click", () => {
+        audio.play();
+      }, { once: true });
+    });
+    return;
+  }
+
+  document.getElementById("countdown-page").style.display = "flex";
+  document.body.classList.add("no-scroll"); // ⬅️ Prevent scrolling before birthday
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  const seconds = Math.floor((diff / 1000) % 60);
+
+  document.getElementById("timer").textContent =
+    `${days}d ${hours}h ${minutes}m ${seconds}s`;
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+    </script>
+
+ 
 </script>
 
 </body>
