@@ -6,23 +6,26 @@
   <title>Birthday Countdown</title>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet" />
   <style>
-    html, body {
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+    html, body {
       height: 100%;
+      width: 100%;
       overflow: hidden;
       background: radial-gradient(ellipse at center, #0a0a0a 0%, #000 100%);
       font-family: 'Dancing Script', cursive;
       color: #fff;
+      text-align: center;
     }
-
     canvas {
       position: absolute;
       top: 0;
       left: 0;
       z-index: 0;
     }
-
     .content {
       position: relative;
       z-index: 2;
@@ -30,41 +33,53 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      text-align: center;
-      height: 100vh;
+      height: 100%;
+      padding: 20px;
     }
-
     h1 {
-      font-size: 3em;
-      color: #ff69b4;
-      text-shadow: 0 0 10px #ff69b4, 0 0 20px #ff69b4;
-    }
-
-    .date-text {
-      font-size: 1.3em;
-      margin: 10px 0 30px;
-      color: #ffd1dc;
-      text-shadow: 0 0 5px #ff69b4;
-    }
-
-    #countdown {
       font-size: 2.5em;
+      color: #ff69b4;
+      text-shadow: 0 0 10px #ff69b4;
+      margin-bottom: 10px;
+    }
+    .date-text {
+      font-size: 1.2em;
+      color: #ffd1dc;
+      margin-bottom: 30px;
+    }
+    #countdown {
       display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 15px;
     }
-
     .time-box {
-      background: rgba(255, 105, 180, 0.2);
-      padding: 15px 20px;
+      background: rgba(255, 105, 180, 0.15);
+      padding: 12px 16px;
       border-radius: 10px;
       box-shadow: 0 0 10px #ff69b4;
+      min-width: 70px;
+    }
+    .time-box span {
+      font-size: 1.8em;
+      display: block;
+    }
+    .label {
+      font-size: 0.7em;
+      margin-top: 4px;
+      color: #ffc0cb;
     }
 
-    .label {
-      font-size: 0.5em;
-      display: block;
-      margin-top: 5px;
-      color: #ffc0cb;
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2em;
+      }
+      .date-text {
+        font-size: 1em;
+      }
+      .time-box span {
+        font-size: 1.4em;
+      }
     }
   </style>
 </head>
@@ -73,7 +88,7 @@
 
   <div class="content">
     <h1>🎉 Kanishka’s Birthday Countdown 🎉</h1>
-    <div class="date-text">Birthday on: <strong> 2 JULY 2025</strong></div>
+    <div class="date-text">Birthday on: <strong>2 July 2025</strong></div>
 
     <div id="countdown">
       <div class="time-box"><span id="days">00</span><span class="label">Days</span></div>
@@ -115,11 +130,9 @@
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
     }
-
     window.addEventListener("resize", resize);
     resize();
 
-    // ⭐ Star particles
     const stars = Array.from({ length: 150 }).map(() => ({
       x: Math.random() * w,
       y: Math.random() * h,
@@ -128,7 +141,6 @@
       delta: Math.random() * 0.02
     }));
 
-    // 🎇 Fireworks burst particles
     let particles = [];
 
     function createFirework() {
@@ -151,12 +163,11 @@
       }
     }
 
-    setInterval(createFirework, 1000); // 🔁 Fireworks every 1.8s
+    setInterval(createFirework, 1800);
 
     function animate() {
       ctx.clearRect(0, 0, w, h);
 
-      // Draw stars
       for (let s of stars) {
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
@@ -166,7 +177,6 @@
         if (s.alpha <= 0 || s.alpha >= 1) s.delta *= -1;
       }
 
-      // Draw fireworks
       particles.forEach((p, i) => {
         p.x += p.vx;
         p.y += p.vy;
@@ -174,7 +184,6 @@
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
         ctx.fillStyle = `rgba(${p.color.match(/\d+/g).join(',')}, ${p.alpha})`;
         ctx.fill();
 
@@ -188,4 +197,3 @@
   </script>
 </body>
 </html>
-<!-- Compare this snippet from main.html: -->
