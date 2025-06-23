@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Birthday Countdown</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: radial-gradient(ellipse at center, #0a0a0a 0%, #000 100%);
+      font-family: 'Dancing Script', cursive;
+      color: #fff;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 100vh;
+    }
+
+    h1 {
+      font-size: 3em;
+      color: #ff69b4;
+      text-shadow: 0 0 10px #ff69b4, 0 0 20px #ff69b4;
+    }
+
+    .date-text {
+      font-size: 1.3em;
+      margin: 10px 0 30px;
+      color: #ffd1dc;
+      text-shadow: 0 0 5px #ff69b4;
+    }
+
+    #countdown {
+      font-size: 2.5em;
+      display: flex;
+      gap: 15px;
+    }
+
+    .time-box {
+      background: rgba(255, 105, 180, 0.2);
+      padding: 15px 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ff69b4;
+    }
+
+    .label {
+      font-size: 0.5em;
+      display: block;
+      margin-top: 5px;
+      color: #ffc0cb;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+
+  <div class="content">
+    <h1>🎉 Kanishka’s Birthday Countdown 🎉</h1>
+    <div class="date-text">Birthday on: <strong>25 June 2025</strong></div>
+
+    <div id="countdown">
+      <div class="time-box"><span id="days">00</span><span class="label">Days</span></div>
+      <div class="time-box"><span id="hours">00</span><span class="label">Hours</span></div>
+      <div class="time-box"><span id="minutes">00</span><span class="label">Minutes</span></div>
+      <div class="time-box"><span id="seconds">00</span><span class="label">Seconds</span></div>
+    </div>
+  </div>
+
+  <script>
+    const birthdayDate = new Date("June 25, 2025 00:00:00").getTime();
+    const countdown = setInterval(() => {
+      const now = new Date().getTime();
+      const timeLeft = birthdayDate - now;
+
+      if (timeLeft <= 0) {
+        clearInterval(countdown);
+        window.location.href = "main.html";
+      } else {
+        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+        document.getElementById("days").textContent = days.toString().padStart(2, "0");
+        document.getElementById("hours").textContent = hours.toString().padStart(2, "0");
+        document.getElementById("minutes").textContent = minutes.toString().padStart(2, "0");
+        document.getElementById("seconds").textContent = seconds.toString().padStart(2, "0");
+      }
+    }, 1000);
+  </script>
+
+  <script>
+    const canvas = document.getElementById("bg-canvas");
+    const ctx = canvas.getContext("2d");
+    let w, h;
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener("resize", resize);
+    resize();
+
+    // ⭐ Star particles
+    const stars = Array.from({ length: 150 }).map(() => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      radius: Math.random() * 1.5,
+      alpha: Math.random(),
+      delta: Math.random() * 0.02
+    }));
+
+    // 🎇 Fireworks burst particles
+    let particles = [];
+
+    function createFirework() {
+      const x = Math.random() * w;
+      const y = Math.random() * h / 2;
+      const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+
+      for (let i = 0; i < 30; i++) {
+        const angle = Math.random() * 2 * Math.PI;
+        const speed = Math.random() * 4 + 2;
+        particles.push({
+          x,
+          y,
+          radius: 2,
+          color,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          alpha: 1,
+        });
+      }
+    }
+
+    setInterval(createFirework, 1000); // 🔁 Fireworks every 1.8s
+
+    function animate() {
+      ctx.clearRect(0, 0, w, h);
+
+      // Draw stars
+      for (let s of stars) {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+        ctx.fill();
+        s.alpha += s.delta;
+        if (s.alpha <= 0 || s.alpha >= 1) s.delta *= -1;
+      }
+
+      // Draw fireworks
+      particles.forEach((p, i) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.015;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
+        ctx.fillStyle = `rgba(${p.color.match(/\d+/g).join(',')}, ${p.alpha})`;
+        ctx.fill();
+
+        if (p.alpha <= 0) particles.splice(i, 1);
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
+<!-- Compare this snippet from main.html: -->
